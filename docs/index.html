@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vastuu Group - eIDAS 2.0 Transformation Architecture</title>
+    <meta name="description" content="eIDAS 2.0 transformation architecture for Vastuu Group's trusted worker services - W3C VC, EU Digital Identity Wallet, AI agent automation">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0066cc;
+            --secondary: #004d99;
+            --accent: #00aaff;
+            --text: #2c3e50;
+            --bg: #ffffff;
+            --bg-light: #f8f9fa;
+            --border: #dee2e6;
+            --success: #28a745;
+            --warning: #ffc107;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--bg);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            margin-bottom: 30px;
+        }
+
+        .hero {
+            background: var(--bg-light);
+            padding: 50px 0;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-content h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .hero-content p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 1em;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        section {
+            padding: 50px 0;
+        }
+
+        section h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .card p {
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .card .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .card .badge.success {
+            background: var(--success);
+        }
+
+        .card .badge.warning {
+            background: var(--warning);
+        }
+
+        .architecture-diagram {
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .architecture-diagram pre {
+            text-align: left;
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 8px;
+        }
+
+        .stat .number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .stat .label {
+            color: var(--text);
+            font-size: 1em;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 30px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--primary);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -32px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px var(--primary);
+        }
+
+        .timeline-item h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .timeline-item p {
+            margin-bottom: 5px;
+        }
+
+        footer {
+            background: var(--text);
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 5px solid var(--primary);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .highlight-box h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🇪🇺 Vastuu Group eIDAS 2.0 Transformation</h1>
+            <p>Wallet-Native Infrastructure for Trusted Worker Services</p>
+        </div>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h2>Digital Identity Infrastructure for Construction Industry</h2>
+            <p>Transform from centralized registry to decentralized identity ecosystem using EU Digital Identity Wallet, W3C Verifiable Credentials, and AI agent automation.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/jgmikael/vastuu-group-eidas-transformation" class="btn btn-primary" target="_blank">📚 View on GitHub</a>
+                <a href="https://github.com/jgmikael/vastuu-group-eidas-transformation/blob/master/PROCESS_DESCRIPTION.md" class="btn btn-secondary" target="_blank">📖 Read Documentation</a>
+            </div>
+        </div>
+    </div>
+
+    <section>
+        <div class="container">
+            <h2>📊 Repository Overview</h2>
+            <div class="stats">
+                <div class="stat">
+                    <div class="number">4,761</div>
+                    <div class="label">Lines of Documentation</div>
+                </div>
+                <div class="stat">
+                    <div class="number">6</div>
+                    <div class="label">Architecture Layers</div>
+                </div>
+                <div class="stat">
+                    <div class="number">18</div>
+                    <div class="label">Months Implementation</div>
+                </div>
+                <div class="stat">
+                    <div class="number">€2.1M</div>
+                    <div class="label">Estimated Budget</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: var(--bg-light);">
+        <div class="container">
+            <h2>📘 Core Documents</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Process Description</h3>
+                    <p>Complete transformation process flows including AI agent automation, credential issuance, and cross-border scenarios.</p>
+                    <span class="badge">1,637 lines</span>
+                    <span class="badge success">7 sections</span>
+                    <p style="margin-top: 15px;">
+                        <a href="https://github.com/jgmikael/vastuu-group-eidas-transformation/blob/master/PROCESS_DESCRIPTION.md" class="btn btn-secondary" target="_blank">Read →</a>
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Technical Architecture</h3>
+                    <p>Full system architecture with 6-layer model, component design, data models, security, and deployment strategies.</p>
+                    <span class="badge">2,011 lines</span>
+                    <span class="badge success">8 sections</span>
+                    <p style="margin-top: 15px;">
+                        <a href="https://github.com/jgmikael/vastuu-group-eidas-transformation/blob/master/TECHNICAL_ARCHITECTURE.md" class="btn btn-secondary" target="_blank">Read →</a>
+                    </p>
+                </div>
+
+                <div class="card">
+                    <h3>Implementation Roadmap</h3>
+                    <p>18-month phased implementation plan with budget breakdown, risk management, and success metrics.</p>
+                    <span class="badge">636 lines</span>
+                    <span class="badge warning">6 phases</span>
+                    <p style="margin-top: 15px;">
+                        <a href="https://github.com/jgmikael/vastuu-group-eidas-transformation/blob/master/ROADMAP.md" class="btn btn-secondary" target="_blank">Read →</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>🏗️ Six-Layer Architecture</h2>
+            <div class="architecture-diagram">
+                <pre>
+┌─────────────────────────────────────────────────────────┐
+│  Layer 6: Governance & Audit                            │
+│  Policy enforcement • Revocation • Conformance          │
+└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  Layer 5: Trust Services & Delivery                     │
+│  eIDAS QES/QEAA • Timestamps • QERDS                   │
+└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  Layer 4: Interaction & Exchange Protocols              │
+│  OpenID4VCI/VP • DIDComm • REST APIs                   │
+└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  Layer 3: Exchange Objects & Syntax Bindings            │
+│  W3C VC 2.0 (JSON-LD) • SD-JWT • JSON/XML             │
+└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  Layer 2: Semantic Application Profiles                 │
+│  SHACL shapes • Code lists • Profile rules             │
+└─────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────┐
+│  Layer 1: Canonical Semantic Foundation                 │
+│  RDF/RDFS/OWL • SKOS • EU Core Vocabularies           │
+└─────────────────────────────────────────────────────────┘
+                </pre>
+            </div>
+            <div class="highlight-box">
+                <h3>Key Principle</h3>
+                <p style="font-size: 1.1em;">
+                    <strong>"Semantic interoperability is mandatory; syntax, credential envelope, and protocol are replaceable bindings."</strong>
+                </p>
+                <p>Layers 1-2 are stable and mandatory. Layers 3-6 are replaceable technical bindings.</p>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: var(--bg-light);">
+        <div class="container">
+            <h2>🎯 Key Features</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>🔐 W3C Verifiable Credentials</h3>
+                    <p>Full implementation of W3C VC Data Model 2.0 with JSON-LD format, cryptographic signatures, and selective disclosure.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🤖 AI Agent Automation</h3>
+                    <p>Worker and employer AI agents automate job search, hiring, onboarding, and compliance processes.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🇪🇺 eIDAS 2.0 Compliance</h3>
+                    <p>Integration with eIDAS trust framework, qualified signatures, and cross-border acceptance.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🔗 Semantic Interoperability</h3>
+                    <p>OWL ontology, SHACL validation, alignment with EU Core Vocabularies and EBW standards.</p>
+                </div>
+
+                <div class="card">
+                    <h3>📱 Digital Wallets</h3>
+                    <p>EUDI Wallet for workers, EBW Wallet for employers, with OpenID4VCI/VP protocols.</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌍 Cross-Border Ready</h3>
+                    <p>Designed for EU-wide interoperability with EBSI integration and multi-country acceptance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>📅 Implementation Timeline</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h4>Phase 1: Semantic Modeling</h4>
+                    <p><strong>Duration:</strong> 4 months</p>
+                    <p><strong>Budget:</strong> €120K - €150K</p>
+                    <p>OWL ontology, SHACL shapes, EU vocabulary alignment</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>Phase 2: VC Model Definition</h4>
+                    <p><strong>Duration:</strong> 3 months</p>
+                    <p><strong>Budget:</strong> €90K - €110K</p>
+                    <p>Credential schemas, JSON-LD contexts, validation test suite</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>Phase 3: Issuer Service</h4>
+                    <p><strong>Duration:</strong> 6 months</p>
+                    <p><strong>Budget:</strong> €400K - €500K</p>
+                    <p>VC issuance API, source system integrations, HSM signing</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>Phase 4: Wallet Integration</h4>
+                    <p><strong>Duration:</strong> 4 months</p>
+                    <p><strong>Budget:</strong> €250K - €300K</p>
+                    <p>EUDI & EBW wallet apps (iOS, Android, Web)</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>Phase 5: Verification Services</h4>
+                    <p><strong>Duration:</strong> 4 months</p>
+                    <p><strong>Budget:</strong> €200K - €250K</p>
+                    <p>Site verifier app, compliance dashboard, offline support</p>
+                </div>
+
+                <div class="timeline-item">
+                    <h4>Phase 6: EU Interoperability & Launch</h4>
+                    <p><strong>Duration:</strong> 12 months</p>
+                    <p><strong>Budget:</strong> €650K - €850K</p>
+                    <p>QTSP certification, cross-border integration, production launch</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: var(--bg-light);">
+        <div class="container">
+            <h2>📈 Expected Benefits</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>⚡ 60-70% Faster</h3>
+                    <p>Time to hire reduced from 3-4 weeks to 7-10 days</p>
+                </div>
+
+                <div class="card">
+                    <h3>🎯 75-80% Reduction</h3>
+                    <p>HR time per hire: 20-30 hours → 4-6 hours</p>
+                </div>
+
+                <div class="card">
+                    <h3>✅ 90% Fewer Errors</h3>
+                    <p>Compliance errors reduced from 5-10% to <1%</p>
+                </div>
+
+                <div class="card">
+                    <h3>🌍 Cross-Border</h3>
+                    <p>80% reduction in cross-border posting overhead</p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <h3>Strategic Transformation</h3>
+                <p style="font-size: 1.1em;">
+                    <strong>FROM:</strong> Centralized data warehouse + verification service<br>
+                    <strong>TO:</strong> EU-level compliance identity provider + trust anchor
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>🔧 Technical Stack</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Semantic Layer</h3>
+                    <div class="badge">RDF/OWL/SHACL</div>
+                    <div class="badge">SKOS</div>
+                    <div class="badge">SPARQL</div>
+                </div>
+
+                <div class="card">
+                    <h3>Credentials & Identity</h3>
+                    <div class="badge">W3C VC 2.0</div>
+                    <div class="badge">did:ebsi</div>
+                    <div class="badge">JSON-LD</div>
+                </div>
+
+                <div class="card">
+                    <h3>Protocols</h3>
+                    <div class="badge">OpenID4VCI</div>
+                    <div class="badge">OpenID4VP</div>
+                    <div class="badge">DIDComm</div>
+                </div>
+
+                <div class="card">
+                    <h3>Backend</h3>
+                    <div class="badge">TypeScript</div>
+                    <div class="badge">Node.js</div>
+                    <div class="badge">PostgreSQL</div>
+                </div>
+
+                <div class="card">
+                    <h3>Mobile & Web</h3>
+                    <div class="badge">React Native</div>
+                    <div class="badge">Next.js</div>
+                    <div class="badge">TypeScript</div>
+                </div>
+
+                <div class="card">
+                    <h3>Infrastructure</h3>
+                    <div class="badge">Kubernetes</div>
+                    <div class="badge">Azure/AWS</div>
+                    <div class="badge">HSM</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: var(--bg-light);">
+        <div class="container">
+            <h2>📚 Resources</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>Use Cases</h3>
+                    <p>Real-world scenarios demonstrating the system in action:</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;"><a href="https://github.com/jgmikael/vastuu-group-eidas-transformation/blob/master/use-cases/construction-worker.md" target="_blank">Construction Worker Site Access</a></li>
+                        <li>Cross-Border Worker Posting (coming soon)</li>
+                        <li>Multi-Employer Scenarios (coming soon)</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Semantic Models</h3>
+                    <p>Complete vocabulary and credential definitions:</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;"><a href="https://github.com/jgmikael/vastuu-group-eidas-transformation/blob/master/semantic/vocabulary.ttl" target="_blank">OWL Vocabulary (Turtle)</a></li>
+                        <li><a href="https://github.com/jgmikael/vastuu-group-eidas-transformation/tree/master/semantic/examples" target="_blank">Example Credentials (JSON-LD)</a></li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Related Projects</h3>
+                    <p>Part of a larger digital identity ecosystem:</p>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;"><a href="https://jgmikael.github.io/eu-business-wallet-demo/" target="_blank">EU Business Wallet Demo</a></li>
+                        <li><a href="https://jgmikael.github.io/one-record/" target="_blank">One Record (SAP → UBL)</a></li>
+                        <li><a href="https://github.com/jgmikael/vocabularies" target="_blank">Combined Vocabularies</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <h2>🚀 Get Started</h2>
+            <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+                <p style="font-size: 1.1em; margin-bottom: 30px;">
+                    Explore the complete documentation on GitHub to understand the transformation architecture and implementation plan.
+                </p>
+                <div class="cta-buttons">
+                    <a href="https://github.com/jgmikael/vastuu-group-eidas-transformation" class="btn btn-primary" target="_blank">
+                        📚 View Full Repository
+                    </a>
+                    <a href="https://github.com/jgmikael/vastuu-group-eidas-transformation/blob/master/README.md" class="btn btn-secondary" target="_blank">
+                        📖 Start with README
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p style="font-size: 1.1em; margin-bottom: 15px;">
+                <strong>Vastuu Group eIDAS 2.0 Transformation Architecture</strong>
+            </p>
+            <p>
+                <a href="https://github.com/jgmikael/vastuu-group-eidas-transformation" target="_blank">GitHub Repository</a> | 
+                <a href="https://github.com/jgmikael" target="_blank">More Projects</a>
+            </p>
+            <p style="margin-top: 20px; opacity: 0.8;">
+                Built with 🔧 for the future of trusted digital labor markets
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9em; opacity: 0.7;">
+                © 2024 • MIT License • Independent technical architecture
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
