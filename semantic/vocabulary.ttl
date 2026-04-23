@@ -1,0 +1,184 @@
+@prefix vg: <https://vastuu.fi/vocabulary/> .
+@prefix ebw: <https://ebw.europa.eu/vocabulary/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+
+# Ontology Metadata
+vg: a owl:Ontology ;
+    rdfs:label "Vastuu Group Trusted Worker Vocabulary"@en ,
+               "Vastuu Group Luotettava työntekijä -sanasto"@fi ;
+    dct:title "Vastuu Group Vocabulary" ;
+    dct:description "Semantic vocabulary for trusted worker services in construction industry" ;
+    dct:created "2024-04-20"^^xsd:date ;
+    dct:modified "2024-04-20"^^xsd:date ;
+    dct:creator "Vastuu Group Oy" ;
+    owl:versionInfo "1.0.0" .
+
+# Core Classes
+
+vg:Worker a owl:Class ;
+    rdfs:subClassOf ebw:NaturalPersonRepresentative ;
+    rdfs:label "Construction Worker"@en, "Työntekijä"@fi ;
+    rdfs:comment "A natural person employed in construction sector"@en ;
+    skos:definition "Person performing work in construction industry with appropriate qualifications and permissions"@en .
+
+vg:ConstructionEmployer a owl:Class ;
+    rdfs:subClassOf ebw:EconomicOperator ;
+    rdfs:label "Construction Employer"@en, "Rakennusalan työnantaja"@fi ;
+    rdfs:comment "Legal entity employing workers in construction sector"@en .
+
+vg:WorkPermit a owl:Class ;
+    rdfs:label "Work Permit"@en, "Työlupa"@fi ;
+    rdfs:comment "Authorization to work in a specific country"@en ;
+    skos:definition "Official permission granted to a person to work in a specific jurisdiction"@en .
+
+vg:SafetyTraining a owl:Class ;
+    rdfs:label "Safety Training"@en, "Työturvallisuuskoulutus"@fi ;
+    rdfs:comment "Mandatory or recommended safety training for construction work"@en .
+
+vg:ProfessionalQualification a owl:Class ;
+    rdfs:label "Professional Qualification"@en, "Ammattipätevyys"@fi ;
+    rdfs:comment "Recognized professional competence in a specific trade"@en .
+
+vg:ComplianceStatus a owl:Class ;
+    rdfs:label "Compliance Status"@en, "Vaatimustenmukaisuus"@fi ;
+    rdfs:comment "Overall compliance assessment for an employer"@en .
+
+vg:TaxNumber a owl:Class ;
+    rdfs:label "Tax Number"@en, "Veronumero"@fi ;
+    rdfs:comment "Tax identification number issued by tax authority"@en .
+
+vg:SocialSecurityCoverage a owl:Class ;
+    rdfs:label "Social Security Coverage"@en, "Sosiaaliturvan kattavuus"@fi ;
+    rdfs:comment "Information about applicable social security system (e.g., A1 certificate)"@en .
+
+# Object Properties
+
+vg:hasWorkPermit a owl:ObjectProperty ;
+    rdfs:domain vg:Worker ;
+    rdfs:range vg:WorkPermit ;
+    rdfs:label "has work permit"@en , "on työlupa"@fi ;
+    rdfs:comment "Relates a worker to their work permit"@en .
+
+vg:hasSafetyTraining a owl:ObjectProperty ;
+    rdfs:domain vg:Worker ;
+    rdfs:range vg:SafetyTraining ;
+    rdfs:label "has safety training"@en , "on työturvallisuuskoulutus"@fi .
+
+vg:hasQualification a owl:ObjectProperty ;
+    rdfs:domain vg:Worker ;
+    rdfs:range vg:ProfessionalQualification ;
+    rdfs:label "has qualification"@en , "on pätevyys"@fi .
+
+vg:hasTaxNumber a owl:ObjectProperty ;
+    rdfs:domain vg:Worker ;
+    rdfs:range vg:TaxNumber ;
+    rdfs:label "has tax number"@en , "on veronumero"@fi .
+
+vg:hasSocialSecurityCoverage a owl:ObjectProperty ;
+    rdfs:domain vg:Worker ;
+    rdfs:range vg:SocialSecurityCoverage ;
+    rdfs:label "has social security coverage"@en .
+
+vg:employs a owl:ObjectProperty ;
+    rdfs:domain vg:ConstructionEmployer ;
+    rdfs:range vg:Worker ;
+    rdfs:label "employs"@en , "työllistää"@fi .
+
+vg:hasComplianceStatus a owl:ObjectProperty ;
+    rdfs:domain vg:ConstructionEmployer ;
+    rdfs:range vg:ComplianceStatus ;
+    rdfs:label "has compliance status"@en .
+
+# Datatype Properties
+
+vg:taxNumberValue a owl:DatatypeProperty ;
+    rdfs:domain vg:TaxNumber ;
+    rdfs:range xsd:string ;
+    rdfs:label "tax number value"@en ;
+    skos:definition "The actual tax identification number string"@en .
+
+vg:taxNumberStatus a owl:DatatypeProperty ;
+    rdfs:domain vg:TaxNumber ;
+    rdfs:range xsd:string ;
+    rdfs:label "tax number status"@en ;
+    skos:definition "Status of tax number (Active, Inactive, Suspended)"@en .
+
+vg:employerID a owl:DatatypeProperty ;
+    rdfs:domain vg:ConstructionEmployer ;
+    rdfs:range xsd:string ;
+    rdfs:label "employer ID"@en .
+
+vg:registrationNumber a owl:DatatypeProperty ;
+    rdfs:domain vg:ConstructionEmployer ;
+    rdfs:range xsd:string ;
+    rdfs:label "registration number"@en .
+
+vg:vatNumber a owl:DatatypeProperty ;
+    rdfs:domain vg:ConstructionEmployer ;
+    rdfs:range xsd:string ;
+    rdfs:label "VAT number"@en .
+
+vg:validFrom a owl:DatatypeProperty ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "valid from"@en , "voimassa alkaen"@fi .
+
+vg:validUntil a owl:DatatypeProperty ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "valid until"@en , "voimassa asti"@fi .
+
+vg:qualificationType a owl:DatatypeProperty ;
+    rdfs:domain vg:ProfessionalQualification ;
+    rdfs:range xsd:string ;
+    rdfs:label "qualification type"@en .
+
+vg:qualificationLevel a owl:DatatypeProperty ;
+    rdfs:domain vg:ProfessionalQualification ;
+    rdfs:range xsd:string ;
+    rdfs:label "qualification level"@en ;
+    rdfs:comment "EQF level or equivalent"@en .
+
+vg:courseType a owl:DatatypeProperty ;
+    rdfs:domain vg:SafetyTraining ;
+    rdfs:range xsd:string ;
+    rdfs:label "course type"@en .
+
+vg:completionDate a owl:DatatypeProperty ;
+    rdfs:domain vg:SafetyTraining ;
+    rdfs:range xsd:date ;
+    rdfs:label "completion date"@en .
+
+vg:expiryDate a owl:DatatypeProperty ;
+    rdfs:range xsd:date ;
+    rdfs:label "expiry date"@en .
+
+vg:permitType a owl:DatatypeProperty ;
+    rdfs:domain vg:WorkPermit ;
+    rdfs:range xsd:string ;
+    rdfs:label "permit type"@en .
+
+vg:country a owl:DatatypeProperty ;
+    rdfs:range xsd:string ;
+    rdfs:label "country"@en ;
+    rdfs:comment "ISO 3166-1 alpha-2 country code"@en .
+
+vg:complianceLevel a owl:DatatypeProperty ;
+    rdfs:domain vg:ComplianceStatus ;
+    rdfs:range xsd:string ;
+    rdfs:label "compliance level"@en .
+
+vg:coverageCountry a owl:DatatypeProperty ;
+    rdfs:domain vg:SocialSecurityCoverage ;
+    rdfs:range xsd:string ;
+    rdfs:label "coverage country"@en .
+
+vg:certificateType a owl:DatatypeProperty ;
+    rdfs:domain vg:SocialSecurityCoverage ;
+    rdfs:range xsd:string ;
+    rdfs:label "certificate type"@en ;
+    skos:example "A1_Certificate", "E101_Form" .
